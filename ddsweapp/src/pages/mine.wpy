@@ -1,0 +1,75 @@
+<style lang="less">
+	.container{
+				width:100%;
+				height:100%;
+				background:#f5f5f5;
+				.header{
+					text-align:center;
+					background:#fff;
+					padding:24rpx 0;
+					.avat{
+						width:200rpx;
+						height:200rpx;
+						border-radius:100rpx;
+					}
+					.nickname{
+						color:#d9220e;
+						font-size:14pt;						
+					}
+				}
+				.list{
+					background:#fff;
+					padding:24rpx 16rpx;
+					font-size:12pt;
+					margin-top:20rpx;
+					position:relative;
+					&:after{
+						content:"";
+						width:16rpx;
+						height:24rpx;
+						background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAj1JREFUOBGVVE1LHEEQ7e4EkRBjiBL9AQqCQmB32d3xEMgxp6CCssEFFUMiBA+e9pKTgeBBBRGChEBCPAghISgiiEhu87Gzq/4Df4Yf292+Wulx2llXbRiq+1W9N9VVNcMYltaau2741fOqU3S+zxIUDOIKzAdIfXPdygRhd10ChCUQPxIBmQjO2XcIFu8sANox51wbAokA++H74VuDNbOcnAieRhnWLslRuORcjOfzqY0IabCpCxBOb1SK/cT2YSxOCsEKuVzmdwyztpEAob5fGdKabSCTllhUjTE+5jjpvzEs2loChLpu9TVjioJbTRQKe45nFJn8M5ixCQFyeF74CjXZRDEfR4EQEYKPZLPpLYORbShADt+vOlqrHVypnc600K0zNGwYmWxfIk0EKCAMw1StxnYh0mEIoJziGXKc1A5hN2ZgCEFw2C+l3Md1nhsM9gQ1eZPPZ3broxxzJLZayy6Qn1xzoNWijbCmAkFQfYmWUtGijmBPA1bEgP0hgfjQ0DlaQXAwKKWiYj0yIIqocOvJ+HQ2zKBcPswqJVGkeBvpe+HvQP5lBMkmiuh5lTTwPaT+1ATSx4aizeRy6TWDGWtlgN6/ABFtuyJTIMizjcjkiwTK5aMBDM4esGfkMAvTNwfyqjlft3UBDEyflOdIm3XaAaIE8rKN2acHnnfQq5T+D3K37RKfMG1fbCx5ErhvD2DrzbjzPMifk+FJpN4FFK8AoXU8Aj+QBXwspWToLQh+Ju/xV1q8JSzhvgCBx9kzUoIj2gAAAABJRU5ErkJggg==);
+						background-size:16rpx 24rpx;
+						position:absolute;
+						top:35rpx;
+						right:10rpx;
+						color:#aaa;						
+					}
+				}
+			}
+</style>
+<template>
+	<view class="container">
+		<view class="header">			
+			<image class="avat" src="{{userInfos.avatarUrl}}"></image>
+			<view class="nickname">{{userInfos.nickName}}</view>
+		</view>
+		<navigator url="/pages/collect">
+			<view class="list">		 	
+				我的收藏			
+			</view>
+		</navigator>
+		<navigator url="/pages/note">
+			<view class="list">
+				我的笔记
+			</view>
+		</navigator>
+	</view>
+</template>
+<script>
+	import wepy from 'wepy'
+
+	export default class mine extends wepy.page{
+		config = {
+	      navigationBarTitleText: '我的'
+	    }
+	    data={
+	    	userInfos:{}
+	    }
+	    onLoad(){	
+	    	var that = this    	
+	    	this.$parent.getUserInfo(function(res){
+	    		that.userInfos = res
+	    	})
+	    }
+	}
+</script>

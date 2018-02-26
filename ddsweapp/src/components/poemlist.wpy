@@ -1,0 +1,37 @@
+<style lang="less">
+  .poem_list{
+    width:100%
+  }
+  .poem_list .li{
+    background: rgba(255,255,255,0.5);
+    padding: 30rpx 16rpx;
+    border-bottom: 1rpx dotted #ccc;
+    font-size: 10pt
+  }
+  .poem_list .li .title{
+    width:300px; overflow:hidden;  text-overflow:ellipsis; white-space:nowrap;display:inline-block
+  }
+  .poem_list .li .author{
+    color: #999;
+    float: right;
+  }
+</style>
+<template>
+    <view class="poem_list">
+      <view class="li">
+        <text class="title">{{title}}</text>
+        <text class="author">{{author}}</text>                
+      </view>
+    </view>       
+</template>
+<script>
+  import wepy from 'wepy'
+
+  export default class poemlist extends wepy.component {
+    props = {
+      title: String,
+      author: String,
+    }
+  }
+
+</script>

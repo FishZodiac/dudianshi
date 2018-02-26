@@ -1,0 +1,73 @@
+<style lang="less">
+	.main{
+		background:#fff;
+		padding:24rpx 5%;
+		width:90%;
+		.list{
+			border:1rpx solid #eee;
+			border-radius:10rpx;
+			padding:10rpx 16rpx;
+			display:flex;
+			margin-top:20rpx;
+			image{
+				flex:1;
+				width:175rpx;
+				height:150rpx;
+			}
+			.title{
+				flex:3;
+				font-size:12pt;
+				padding-left:20rpx;
+				display:flex;
+				align-items:center;
+			}
+		}
+	}
+</style>
+<template>
+	<view class="main">
+		<repeat for="{{list}}">
+		<view class="list" @tap="tap({{item.id}})">
+			<image src="../assets/listbg.png"></image>
+			<view class="title"><text>{{item.title}}</text></view>
+		</view>
+		</repeat>
+	</view>
+</template>
+<script>
+	import wepy from 'wepy'
+
+	export default class Collect extends wepy.page{
+		config = {
+	      navigationBarTitleText: '我的收藏'
+	    }
+	    data = {
+	    	list:[]
+	    }
+	    onLoad(){
+	    	var that = this;
+		    wx.showLoading({
+		      title: '加载中'
+		    })
+	    	wx.getStorage({
+			  key: 'collect',
+			  success: function(res) {
+			      that.list = res.data
+			      wx.hideLoading()
+			  },
+			  fail: function(){
+			  	 wx.showLoading({
+			      title: '暂无收藏'
+			    })
+			  } 
+			})	    		   
+	    }
+	    methods={
+	    	tap(ids) {
+		        wx.navigateTo({
+		          url: `/pages/detail?id=${ids}`  // 打开一个新的同路由页面，但指定不同的数据初始值
+		        })
+		    },
+	    }
+	}
+</script>

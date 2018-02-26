@@ -1,0 +1,78 @@
+<style lang="less">
+	.main{
+		background:#fff;
+		padding:24rpx 5%;
+		width:90%;
+		.list{
+			border:1rpx solid #eee;
+			border-radius:10rpx;
+			padding:10rpx 16rpx;
+			display:flex;
+			margin-top:20rpx;
+			image{
+				flex:1;
+				width:120rpx;
+				height:250rpx;
+			}
+			.title{
+				flex:3;
+				font-size:12pt;
+				padding-left:20rpx;
+				.notes{
+					margin-top:20rpx;
+					color:#999
+				}
+			}
+		}
+	}
+</style>
+<template>
+	<view class="main">
+		<repeat for="{{list}}">
+		<view class="list" @tap="tap({{item.id}})">			
+			<view class="title">
+				<view>{{item.title}}</view>
+				<view class="notes">{{item.note}}</view>
+			</view>
+			<image src="../assets/listbg2.png"></image>
+		</view>
+		</repeat>
+	</view>
+</template>
+<script>
+	import wepy from 'wepy'
+
+	export default class Note extends wepy.page{
+		config = {
+	      navigationBarTitleText: '我的笔记'
+	    }
+	    data = {
+	    	list:[]
+	    }
+	    onLoad(){
+	    	var that = this;
+		    wx.showLoading({
+		      title: '加载中'
+		    })
+	    	wx.getStorage({
+			  key: 'notes',
+			  success: function(res) {
+			      that.list = res.data
+			      wx.hideLoading()
+			  },
+			  fail: function(){
+			  	 wx.showLoading({
+			      title: '暂无笔记'
+			    })
+			  } 
+			})	    		   
+	    }
+	    methods={
+	    	tap(ids) {
+		        wx.navigateTo({
+		          url: `/pages/detail?id=${ids}`  // 打开一个新的同路由页面，但指定不同的数据初始值
+		        })
+		    },
+	    }
+	}
+</script>

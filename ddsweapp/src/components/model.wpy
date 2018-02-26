@@ -1,0 +1,64 @@
+<style lang="less">
+	.model{
+		position:absolute;
+		top:50%;
+		transform: translateY(-50%);
+		width:90%;
+		left:5%;
+		height:500rpx;
+		background:#fff;
+		z-index:9999;
+		border-radius:10rpx;
+		box-shadow: 0 0 10rpx rgba(0, 0, 0, 0.15);
+		.section{
+			padding:24rpx 16rpx;
+			.titles{
+				color:#d9220e;
+				text-align:center;
+				margin-bottom:10rpx;
+			}
+			button[type=primary]{
+				background-color:#d9220e
+			}
+		}
+		&.hide{
+			display:none !important
+		}		
+	}
+</style>
+<template>
+	<view class="model {{isShow == 'true'?'':'hide'}}">
+		<view class="section">
+		  <view class="titles">我的笔记</view>		  
+		  <textarea placeholder="写点什么" auto-focus value="{{content}}" bindinput="changeV"/>
+		  <button type="primary" bindtap="saveNote">保存</button>
+		</view>
+	</view>
+</template>
+<script>
+	import wepy from 'wepy'
+
+	export default class Model extends wepy.component {
+	    props = {	      
+	      content:{
+	      	type: String,
+	      	default: '',
+	      	twoWay: true
+	      },
+	      isShow: {
+	      	type: String,
+	      	default: 'false',
+	      	twoWay: true
+	      }
+	    }	   
+	    methods={
+	    	changeV(e) {
+    			this.content = e.detail.value
+  			},
+  			saveNote(){
+  				this.isShow = 'false';
+  				this.$emit('saveNotes');	    	 
+	    	}
+	    }
+	}
+</script>
