@@ -95,7 +95,7 @@
 		</view>
 		<view class="operate">
 			<view>
-				<text @tap="collect({{detail}})">收藏</text>|<text @tap="write">写点什么</text>|<text @tap="randomChange()">换一首</text>
+				<text @tap="collect({{detail}})">{{colltext}}</text>|<text @tap="write">写点什么</text>|<text @tap="randomChange()">换一首</text>
 			</view>
 		</view>
 		<view class="datetime">
@@ -117,7 +117,8 @@
 	    	detail:{},
 	    	paragraphs:[],
 	    	note:'',
-	    	showModel:"false"
+	    	showModel:"false",
+	    	colltext:'收藏'
 	    }
 	    components = {
 	    	mymodel: Model
@@ -169,10 +170,10 @@
 					return el.id == that.detail.id
 				})
 
-				if (!_temp && _temp != 0) {
+				if (_temp == -1) {
 					_note.push({'id':that.detail.id,title:that.detail.title,note:that.note})
 				}else{
-					_note[_temp].note = that.note
+					_note[_temp].note = that.note					
 				}
 
 				wx.setStorage({
@@ -186,10 +187,19 @@
 	    }
 	    methods={
 	    	collect(item){
+	    		var _tempTxt,_tempTxt2;
+				if (this.colltext == '收藏') {
+					_tempTxt = '取消收藏'
+					_tempTxt2 = '收藏'
+				}else{
+					_tempTxt = '收藏'
+					_tempTxt2 = '取消收藏'
+				}	
 	    		 wx.showLoading({
-			      title: '加入收藏'
+			      title: _tempTxt2
 			    })
 	    		var _ids = [];
+	    		var that = this;
 		    	try {
 				  var value = wx.getStorageSync('collect')
 				  if (value) {
@@ -200,18 +210,22 @@
 				} catch (e) {
 				  // Do something when catch error
 				}				
-				var _temp = _ids.find(function(el){
+				var _temp = _ids.findIndex(function(el){
 					return el.id == item.id
 				})
 
-				if (!_temp) {
+				if (_temp == -1) {
 					_ids.push({'id':item.id,title:item.title})
+				}else{
+					_ids.splice(_temp,1)
 				}
 
 				wx.setStorage({
 				  key:"collect",
 				  data:_ids,
 				  success:function(){
+				  	that.colltext = _tempTxt	  	
+				  	that.$apply()
 				  	wx.hideLoading()
 				  }
 				})
@@ -244,7 +258,43 @@
 		rerender(_data){
 			this.paragraphs = JSON.parse(_data.paragraphs)
 			//this.paragraphs.reverse()	
-			this.detail = _data;				
+			this.detail = _data;
+			var that = this
+			/*获取收藏*/
+			wx.getStorage({
+			  key: 'collect',
+			  success: function(res) {
+			  		if (res.data) {
+				      var _temp = res.data.findIndex(function(el){
+						return el.id == that.detail.id
+					  })					  
+					  if (_temp != -1) {
+					  	that.colltext = '取消收藏'
+					  }else{
+					  	that.colltext = '收藏'
+					  }
+					  that.$apply()
+				  }
+			  } 
+			})
+
+			/*获取笔记*/
+			wx.getStorage({
+			  key: 'notes',
+			  success: function(res) {
+			  		if (res.data) {
+				      var _temp = res.data.findIndex(function(el){
+						return el.id == that.detail.id
+					  })					  
+					  if (_temp != -1) {
+					  	that.note = res.data[_temp].note
+					  }else{
+					  	that.note = ""
+					  }
+					  that.$apply()
+				  }
+			  } 
+			})				
 		}
 	    onLoad(options = {}) {
 		    wx.showLoading({
@@ -254,7 +304,7 @@
 			try {
 			  var value = wx.getStorageSync('listdata')
 			  //&& value.id == options.id
-			  if (value ) {
+			  if (value && value.id == options.id) {
 			    that.rerender(value)        
 		        that.$apply()
 		        wx.hideLoading()
@@ -264,18 +314,6 @@
 			} catch (e) {
 			  that.reloadOne({id:options.id})  
 			}
-
-			 wx.getStorage({
-			  key: 'notes',
-			  success: function(res) {
-			      var _temp = res.data.findIndex(function(el){
-					return el.id == that.detail.id
-				  })
-				  if (_temp || _temp === 0) {
-				  	that.note = res.data[_temp].note
-				  }
-			  } 
-			})
 		   
 		  }
 		}

@@ -1,0 +1,104 @@
+<style lang="less">
+	.search{
+		width:100%;
+		background:#f5f5f5;
+		position: relative;
+		.section{
+			position:fixed;
+			padding:10rpx 5%;
+			width:95%;
+			display:flex;
+			border-bottom:1rpx solid #eee;
+			background:rgba(255,255,255,1);
+			input{
+				flex:5
+			}
+			.btn{
+				flex:1;
+				text-align:center;
+				image{
+					width:50rpx;
+      				height:50rpx;
+      				background:#fff;
+				}
+			}
+		}
+		.list{
+			margin-top:100rpx;
+			background:#fff;
+			.nodata{
+				font-size:12pt;
+				text-align:center;				
+				padding:24rpx 0
+			}
+		}
+	}
+</style>
+<template>
+	<view class="search">
+		<view class="section">
+		  <input placeholder-style="color:#666" placeholder="搜索标题" bindinput="changeV" />
+		  <view class="btn" bindtap="search">
+		  	<image class="search" src="../assets/search.png"></image>
+		  </view>
+		</view>
+		<view class="list">
+			<view class="nodata" wx:if="{{list.length == 0}}">暂无数据</view>
+		    <repeat for="{{list}}" >
+		      <view @tap="tap({{item}})" wx:if="{{item.id}}"> 
+		        <list :title="item.title" :author="item.author" />      
+		      </view>
+		    </repeat>
+		</view>
+	</view>
+</template>
+<script>
+	import wepy from 'wepy'
+  	import List from '../components/poemlist' 
+
+	export default class Search extends wepy.page{
+		config = {
+			navigationBarTitleText: '搜索'
+		}
+		data = {
+			list: [],
+			title: ''
+		}
+		components = {
+	      list: List
+	    }
+	    methods={
+	    	search(){
+	    		var that = this;
+		        wx.showLoading({
+		          title: '加载中'
+		        })
+	    		wx.request({
+			        url: `https://www.hashimao.com/poems/poets/?title=${that.title}`,
+			        success: (res) => {
+			          if (res.statusCode == 200) {
+			            that.list = res.data
+			          }       
+			          that.$apply()
+			          wx.hideLoading()
+			        }
+			      })
+	    	},
+	    	changeV(e) {
+    			this.title = e.detail.value
+  			},
+  			tap(items) {
+		        wx.setStorage({
+		          key:"listdata",
+		          data:items
+		        })
+		        wx.navigateTo({
+		          url: `/pages/detail?id=${items.id}`  // 打开一个新的同路由页面，但指定不同的数据初始值
+		        })
+		    },
+	    }
+		onLoad(){
+
+		}
+	}
+</script>

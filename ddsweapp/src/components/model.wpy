@@ -30,7 +30,7 @@
 	<view class="model {{isShow == 'true'?'':'hide'}}">
 		<view class="section">
 		  <view class="titles">我的笔记</view>		  
-		  <textarea placeholder="写点什么" auto-focus value="{{content}}" bindinput="changeV"/>
+		  <textarea placeholder="写点什么" value="{{content}}" bindinput="changeV"/>
 		  <button type="primary" bindtap="saveNote">保存</button>
 		</view>
 	</view>
