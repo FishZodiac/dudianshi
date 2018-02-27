@@ -56,9 +56,11 @@
 			      wx.hideLoading()
 			  },
 			  fail: function(){
-			  	 wx.showLoading({
-			      title: '暂无收藏'
-			    })
+			  	wx.showToast({
+				  title: '暂无收藏',
+				  icon: 'success',
+				  duration: 2000
+				})
 			  } 
 			})	    		   
 	    }

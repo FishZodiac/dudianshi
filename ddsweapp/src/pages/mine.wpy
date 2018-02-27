@@ -53,6 +53,11 @@
 				我的笔记
 			</view>
 		</navigator>
+		<navigator url="/pages/feedback">
+			<view class="list">
+				说点什么
+			</view>
+		</navigator>
 	</view>
 </template>
 <script>

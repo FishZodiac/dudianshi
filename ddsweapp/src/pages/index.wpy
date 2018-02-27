@@ -86,8 +86,8 @@
       isLoadingMore: false,
       currentPage: 1,
       info: '',
-      tab: ['李白', '李清照', '王維', '孟浩然', '杜甫'],
-      author: '李清照'
+      tab: ['李白', '李清照', '王維', '孟浩然', '杜甫','後主煜','王勃','柳宗元','白居易','李商隱','溫庭筠','劉長卿','劉禹錫'],
+      author: '後主煜'
     }
     methods = {
       tap(items) {

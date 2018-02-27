@@ -26,6 +26,7 @@ export default class extends wepy.app {
       'pages/detail',
       'pages/collect',
       'pages/note',
+      'pages/feedback',
     ],
     "tabBar": {
        "color": "#6e6d6b",

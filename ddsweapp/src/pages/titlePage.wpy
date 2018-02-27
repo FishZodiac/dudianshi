@@ -24,7 +24,7 @@
 		text-align: center;
     	padding-top: 10%;
 	}
-	.titlePage .title .inner span{
+	.titlePage .title .inner view{
 		font-size: 14pt;
 		color: #2a2e3d;
 
@@ -91,7 +91,7 @@
 			      })
     		},
     		randomOne(){
-    			let randomId = parseInt(Math.random()*3373)+1
+    			let randomId = parseInt(Math.random()*6211)+1
     			 wx.navigateTo({
 			        url: `/pages/detail?id=`+randomId  // 打开一个新的同路由页面，但指定不同的数据初始值
 			      })

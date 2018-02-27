@@ -238,7 +238,7 @@
     		 wx.showLoading({
 		      title: '加载中'
 		    })
-			let randomId = parseInt(Math.random()*3373)+1
+			let randomId = parseInt(Math.random()*6211)+1
   			this.itemid = randomId;
   			this.reloadOne({id:randomId})     			
 		}

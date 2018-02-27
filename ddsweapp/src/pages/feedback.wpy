@@ -1,0 +1,72 @@
+<style lang="less">
+	.feedback{
+		width:90%;
+		padding:24rpx 5%;
+		button{
+			background:#d9220e;
+			color:#fff
+		}
+	}
+</style>
+<template>
+	<view class="feedback">
+		<form bindsubmit="formSubmit">
+		  <view class="section">
+			  <textarea placeholder="说点什么" placeholder-style="color:#666;" name="feedback" />
+			</view>
+		  <view class="btn-area">
+		    <button formType="submit" >提交</button>
+		  </view>
+		</form>
+	</view>
+</template>
+<script>
+	import wepy from 'wepy'
+
+	export default class Feedback extends wepy.page{
+		config = {
+			navigationBarTitleText: '建议'
+		}
+		data = {
+			userInfos:{}
+		}
+		methods = {
+			formSubmit(e){
+				var that = this;
+			    wx.showLoading({
+			      title: '提交中'
+			    })
+				var _v = e.detail.value
+				wx.request({
+				  url: 'https://www.hashimao.com/poems/poets/feedback', 
+				  data: {
+				     user: that.userInfos.nickName,
+				     backs: _v.feedback
+				  },
+				  method: 'POST',
+				  header: {
+				      'content-type': 'application/json' // 默认值
+				  },
+				  success: function(res) {
+				    wx.showToast({
+					  title: '提交成功',
+					  icon: 'success',
+					  duration: 2000,
+					  complete:function(){
+					  	wx.switchTab({
+		    				url: `/pages/mine`
+		    			})
+					  }
+					})
+				  }
+				})
+			}
+		}
+		onLoad(){
+			var that = this;
+			that.$parent.getUserInfo(function(res){
+    			that.userInfos = res
+    		})
+		}
+	}
+</script>
