@@ -24,9 +24,11 @@
     }
   }
   .info{
-    color:gray;
+    color:#666;
     opacity:.8;
     margin:0 auto 20rpx auto;
+    font-size:12pt;
+    text-align:center;
     &.loading{
       width: 70rpx;
       height: 70rpx;
@@ -60,7 +62,7 @@
       </view>
     </repeat>
     </view>
-    <text class="info" wx:if="{{info}}">{{info}}</text>
+    <view class="info" wx:if="{{info}}">{{info}}</view>
     <image wx:else class="info loading" src="../assets/loading.gif"/>
   </view>
 </template>
@@ -87,7 +89,8 @@
       currentPage: 1,
       info: '',
       tab: ['李白', '李清照', '王維', '孟浩然', '杜甫','後主煜','王勃','柳宗元','白居易','李商隱','溫庭筠','劉長卿','劉禹錫'],
-      author: '後主煜'
+      author: '李白',
+      nomore: false
     }
     methods = {
       tap(items) {
@@ -102,6 +105,7 @@
       changeV(items){
         this.author = items;
         this.detail.objects = [];
+        this.detail.currentPage = 1;
         wx.showLoading({
           title: '加载中'
         })  
@@ -119,9 +123,9 @@
     }
     onReachBottom() {
       this.currentPage++
-      if (this.currentPage >= 10) { // 最多只能加载10页
+      if (this.nomore) { // 最多只能加载10页
         this.isLoadingMore = false
-        this.info = 'No more news'
+        this.info = '全部已加载'
         this.$apply()
         return
       }
@@ -134,7 +138,14 @@
         url: `https://www.hashimao.com/poems/poets/?page=${that.currentPage}&author=${that.author}`,
         success: (res) => {
           if (res.statusCode == 200) {
-            that.detail.objects = that.detail.objects.concat(res.data)
+            console.log()
+            if (res.data.length == 0) {
+              that.nomore = true;
+               that.isLoadingMore = false
+               that.info = '全部已加载'
+            }else{
+             that.detail.objects = that.detail.objects.concat(res.data)
+            }
           }       
           that.$apply()
           wx.hideLoading()

@@ -213,8 +213,7 @@
 				var _temp = _ids.findIndex(function(el){
 					return el.id == item.id
 				})
-
-				if (_temp == -1) {
+				if (_temp == -1 || _temp == 0) {
 					_ids.push({'id':item.id,title:item.title})
 				}else{
 					_ids.splice(_temp,1)
