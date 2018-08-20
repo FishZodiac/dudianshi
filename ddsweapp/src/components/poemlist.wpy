@@ -6,14 +6,16 @@
     background: rgba(255,255,255,0.5);
     padding: 30rpx 16rpx;
     border-bottom: 1rpx dotted #ccc;
-    font-size: 10pt
+    font-size: 10pt;
+    display: flex;
   }
   .poem_list .li .title{
-    width:300px; overflow:hidden;  text-overflow:ellipsis; white-space:nowrap;display:inline-block
+    flex: 4; overflow:hidden;  text-overflow:ellipsis; white-space:nowrap;display:inline-block
   }
   .poem_list .li .author{
+    flex: 1;
+    text-align: right;
     color: #999;
-    float: right;
   }
 </style>
 <template>

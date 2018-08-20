@@ -27,6 +27,8 @@ export default class extends wepy.app {
       'pages/collect',
       'pages/note',
       'pages/feedback',
+      'pages/shijing',
+      'pages/shijingDetail'
     ],
     "tabBar": {
        "color": "#6e6d6b",
@@ -39,6 +41,11 @@ export default class extends wepy.app {
         "iconPath": "assets/home-off.png",
         "selectedIconPath": "assets/home-on.png",
         "text": "诗集"
+      }, {
+        "pagePath": "pages/shijing",
+        "iconPath": "assets/Shij-off.png",
+        "selectedIconPath": "assets/Shij-on.png",
+        "text": "诗经"
       }, {
         "pagePath": "pages/mine",
         "iconPath": "assets/my-off.png",

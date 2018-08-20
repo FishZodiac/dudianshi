@@ -83,11 +83,11 @@
 	<scroll-view class="detail" scroll-y=true>
 		<view class="title">
 			<text>{{detail.title}}</text>
-			<text class="author">　/　{{detail.author}}</text>
+			<text class="author">　/　{{detail.chapter}}•{{detail.section}}</text>
 		</view>
-		<view class="content">			
-			<repeat for="{{paragraphs}}" >
-			<text class="paraList {{paragraphs.length>5?'smallfont':''}}">
+		<view class="content">
+			<repeat for="{{contents}}" >
+			<text class="paraList {{contents.length>5?'smallfont':''}} {{item.length>20?'smallfont':''}}">
 				{{item}}
 			</text>
 			</repeat>
@@ -112,13 +112,13 @@
 import wepy from 'wepy';
 import Model from '../components/model';
 
-export default class Detail extends wepy.page {
+export default class Shijingdetail extends wepy.page {
   config = {
     navigationBarTitleText: '读点诗'
   };
   data = {
     detail: {},
-    paragraphs: [],
+    contents: [],
     note: '',
     showModel: 'false',
     colltext: '收藏'
@@ -171,21 +171,21 @@ export default class Detail extends wepy.page {
         var value = wx.getStorageSync('notes');
         if (value) {
           _note = value;
-        } else {
-          
+        } else {          
         }
       } catch (e) {
         // Do something when catch error
       }
       var _temp = _note.findIndex(function(el) {
-        return (!el.type) && el.id == that.detail.id;
+        return (el.type) && el.id == that.detail.id;
       });
 
       if (_temp == -1) {
         _note.push({
           id: that.detail.id,
           title: that.detail.title,
-          note: that.note
+          note: that.note,
+          type:'shijing'
         });
       } else {
         _note[_temp].note = that.note;
@@ -226,10 +226,10 @@ export default class Detail extends wepy.page {
         // Do something when catch error
       }
       var _temp = _ids.findIndex(function(el) {
-        return  (!el.type) && el.id == item.id;
+        return (el.type) && el.id == item.id;
       });
       if (_temp == -1) {
-        _ids.push({ id: item.id, title: item.title });
+        _ids.push({ id: item.id, title: item.title, type:'shijing'});
       } else {
         _ids.splice(_temp, 1);
       }
@@ -252,14 +252,14 @@ export default class Detail extends wepy.page {
     wx.showLoading({
       title: '加载中'
     });
-    let randomId = parseInt(Math.random() * 6211) + 1;
+    let randomId = parseInt(Math.random() * 304) + 1;
     this.itemid = randomId;
     this.reloadOne({ id: randomId });
   }
   reloadOne(data) {
     let that = this;
     wx.request({
-      url: `https://www.hashimao.com/poems/poets/one?id=${data.id}`,
+      url: `https://www.hashimao.com/poems/shijing/one?id=${data.id}`,
       success: res => {
         if (res.statusCode == 200) {
           that.rerender(res.data);
@@ -270,8 +270,7 @@ export default class Detail extends wepy.page {
     });
   }
   rerender(_data) {
-    this.paragraphs = JSON.parse(_data.paragraphs);
-    //this.paragraphs.reverse()
+    this.contents = JSON.parse(_data.content);
     this.detail = _data;
     var that = this;
     /*获取收藏*/
@@ -280,7 +279,7 @@ export default class Detail extends wepy.page {
       success: function(res) {
         if (res.data) {
           var _temp = res.data.findIndex(function(el) {
-            return (!el.type) && el.id == that.detail.id;
+            return el.type && el.id == that.detail.id;
           });
           if (_temp != -1) {
             that.colltext = '取消收藏';
@@ -298,7 +297,7 @@ export default class Detail extends wepy.page {
       success: function(res) {
         if (res.data) {
           var _temp = res.data.findIndex(function(el) {
-            return (!el.type) && el.id == that.detail.id;
+            return el.type && el.id == that.detail.id;
           });
           if (_temp != -1) {
             that.note = res.data[_temp].note;
@@ -316,7 +315,7 @@ export default class Detail extends wepy.page {
     });
     var that = this;
     try {
-      var value = wx.getStorageSync('listdata');
+      var value = wx.getStorageSync('shijingdata');
       //&& value.id == options.id
       if (value && value.id == options.id) {
         that.rerender(value);
